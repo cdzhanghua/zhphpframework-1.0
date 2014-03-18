@@ -1,0 +1,12 @@
+#<IfModule mod_rewrite.c>
+#    RewriteEngine On
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteRule !\.(ico|gif|jpg|png|css|images|js)$ index.php [QSA,L]
+#</IfModule>
+
+
+#<VirtualHost 127.0.0.1:80>  
+#    DocumentRoot  D:\www\mymvc
+#    ServerName www.mycms.com
+#</VirtualHost> 

@@ -1,0 +1,874 @@
+感谢你为Zhphp挑错。
+Zhphp是一个小巧灵活、简单易用、易于扩展的轻量级PHP框架。
+将框架和应用分离,开发者只需要关心自己的业务逻辑,功能和扩展完全自由.
+
+*开发建议
+------------
+为了帮助开发者快速开发Zhphp应用，请在专业的IDE下开发，如Netbeans/phpdesigner/zendstudio/phpstorm等专业php的IDE下开发
+Zhphp代码的所有类和方法都尽量写了详细的说明，在IDE下会有详细的提示。
+
+*要求
+------------
+基本要求:web服务器运行的PHP版本5.2.0或以上(兼容php5.3.x以及php5.4.x版本)
+ 建议开启Apache rewrite功能,当然你可以不开始(详见后面的url规则)
+
+*功能特点
+------------
+自由灵活：
+框架的每个模块类独立设计。所有模块均由自身的构造函数和自身的配置接口统一管理配置，完全放弃了全局变量！真正实现类与类之间的松耦合。
+这样即使框架提供的类继续增加下去，对框架的使用者来说都是插件式的使用框架功能。对于没有用到的功能类，框架会让它静悄悄的躺在那儿!（借鉴了ci框架的设计思想）
+
+与此同时：你既可以水平管理网站的各个模块，使得网站的风格同一协调并易于管理；也可以垂直管理网站的各个模块，使得模块之间完全解耦并易于增减模块；
+还可以结合两者实现十分灵活的高内聚低耦合化模块管理。
+
+*智能的类加载机制：
+------------
+你还在为类和文件的加载烦恼吗？还在为满篇include、require文件路径发愁吗？自动为你解决函数、类的自动加载，如果需要还可以自动执行。
+Zhphp 框架还为你提供了一套全新的引入机制，你将体验到一种全新的方式：
+这里根本不要你使用任何方式来加载类！框架为你准备了智能、迅捷的加载机制，你所要做的就是 new myclass( )和 myclass::fun，对就是这样，so easy！
+
+系统类和运行方式基于单子工厂模式。用户自定义模块使用注册单子工厂模式
+
+*全托管的异常和错误处理机制：
+------------
+什么是全托管？PHP有两种错误：
+   一是编译时错误，这个至少我没有看到任何php级的程序能处理，所以开发时请使用XDebug吧；当然你也可以在application/data/erro_log/目录下面找到相应的日志
+   二是运行时错误和异常都全托管的异常和错误处理机制，Zhphp已实现自动管理任何PHP运行时的错误和异常。全托管是让Zhphp处理一切运行时的错误和异常。
+   当然，你也可以随时接管。因此无论你使用Zhphp，还是读Zhphp源码都很少用到和看到try{……}catch(Exception $e){……}，甚至源码里一次也没有用到！
+
+*一般功能介绍：
+------------------------
+1、MVC开发模式+工厂设计模式
+2、主要的面向对象编程结合必要的函数式编程方式以及应用程序抽象接口便于程序的扩展
+3、灵活的伪静态生成
+4、自定义前端控制器
+5、支持模板
+6、自定义异常调试页模板
+7、路由支持 pathinfo  get  apacheRewrite 
+8、支持ajax返回
+9、支持array与xml相互转换
+10、支持文件file缓存
+11、支持apc缓存
+12、支持memcache缓存
+13、支持mysql存储session重写session保存路径
+14、支持下载
+15、支持常见的验证功能
+16、支持验证码功能
+17、支持webservice功能
+18、数据库引擎默认pdo
+19、支持mysql分页
+20、支持模板与php分离
+18、支持前后台分离
+22、支持pclzip 压缩解压功能
+23、支持php判断客户是否在线
+24、支持文件上传功能
+25、支持图片压缩
+26、支持为图片添加水印
+27、其他应用功能.............
+
+*BSD开源许可协议
+------------------
+Zhphp 是一个开源的PHP框架。发布协议使用 BSD 许可证.
+
+BSD开源协议是一个给于使用者很大自由的协议。基本上使用者可以”为所欲为”,可以自由的使用，修改源代码，也可以将修改后的代码作为开源或者专有软件再发布。
+
+但“为所欲为”的前提当你发布使用了BSD协议的代码，或则以BSD协议代码为基础做二次开发自己的产品时，需要满足三个条件：
+
+1、如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议。
+2、如果再发布的只是二进制类库/软件，则需要在类库/软件的文档和版权声明中包含原来代码中的BSD协议。
+3、不可以用开源代码的作者/机构名字和原来产品的名字做市场推广。
+
+BSD 代码鼓励代码共享，但需要尊重代码作者的著作权。BSD由于允许使用者修改和重新发布代码，也允许使用或在BSD代码上开发商业软件发布和销售.
+因此是对 商业集成很友好的协议。而很多的公司企业在选用开源产品的时候都首选BSD协议，因为可以完全控制这些第三方的代码，在必要的时候可以修改或者二次开发。
+
+*运行机制
+=============================
+Zhphp是一个MVC类型的框架，遵循MVC架构，由模型（Model）、视图（View）、控制器（Control）三大层次构成。除了MVC的特点外，Zhphp还有一个特点是，增加了模块（Module）来有机结合这三部分。因此Zhphp的后台程序部分大多是写在一个个模块中，并将这些模块打包在Modules的一个子文件夹中存放，形成如下图所示的协调工作方式。
+
+                       客户端浏览器
+                        |        ^
+                        |        |
+                        V        |
+                       入口      |
+                        |        |
+                        |        |
+                        V        |
+                    控制器<---> 视图
+                       ^
+                       |
+                       |
+                       V
+                     模型
+
+*控制器工作原理
+=============================
+Zhphp控制器在框架中的位置、控制器的三层结构、控制器各层间的协作机制如下图:
+
+         ******************************************************************
+         *                            浏览器                              *
+         ******************************************************************
+               |                                                       ^
+               |                                                       |
+              入口                                                     |
+               |
+             非法过滤                                                  |
+               V                                                       |
+     ********************************************                      |
+     * 网 *<---继承---- *浏览器直接访问的控制器1*                      |
+     * 站 *             *                       *                      |
+     * 控 *<---继承---- *浏览器直接访问的控制器2*---调用相应的视图--->视图
+     * 制 *             *                       *
+     * 器 *<---继承---- *浏览器直接访问的控制器3*
+    *********************************************
+                     ^
+                     |
+                     |
+                     |
+                     V
+                    模型
+					
+*框架目录结构
+=============================
+zhphp
+ ------common 公共文件包含函数
+ --------common.php     系统自动加载
+ ------config  配置文件(详见后面的配置文件加载机制)
+ ---------config.php 开发配置文件
+ ---------database.php 数据库配置文件
+ ---------router.php  路由配置文件
+ ---------template.php  模板配置文件
+ ------core    App应用核心层
+ --------AppComponent.class.php  应用程序控制器组件父类
+ --------AppController.class.php  应用程序控制父类
+ --------AppModel.class.php   应用程序模型父类
+ --------AppApi.class.php    应用程序接口父类
+ ------engine  框架引擎
+ ------config.class.php 配置文件引擎类
+ ------controller.class.php 控制器引擎类
+ ------database.class.php  数据库引擎类
+ ------dispatcher.class.php  应用程序分发引擎类
+ ------router.class.php   应用程序路由引擎类
+ ------template.class.php  应用程序模板引擎类
+ ---------factory 抽象工厂与接口
+ ------extends 第三方接口
+ ---------Pcl
+ ---------Tpl
+ ------library  工具类库
+ ------web   系统默认的主题
+ ------init.php 系统初始化入口文件
+ 
+ *应用程序目录结构
+
+
+【1】开始:
+  请拷贝如下文件到 .htaccess 文件中 或者拷贝 system/back/.htaccess 文件,然后在去掉注释符号
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+【2】请配置你的虚拟主机服务器指向你的应用程序
+    
+找到 Apache2.2\conf\httpd.conf
+打开 LoadModule rewrite_module modules/mod_rewrite.so
+修改  AllowOverride None  为 AllowOverride All
+  
+【3】运行你的项目:系统将自动为你创建项目所需的全部目录
+  系统自动判断url: zhphp为你提供两套url模式
+    1-get:  http://127.0.0.1/index.php?m=module&c=controll&a=action&id=123
+    2-pathInfo: http://127.0.0.1/module/controll/action/123  --使用pathinfo 请去掉index.php
+    3-混合模式: 暂时为提供
+
+
+
+
+【4】编写你的入口文件:
+      zhphp将框架与应用程序分离,这是大多数框架的做法,一套框架允许支持多个应用程序,
+      但是多个应用程序就必须有多个入口文件.一套应用程序运行有多个模块,具体规则请参见后面的项目架构说明。
+
+     编写入口文件:
+      define('APP_DEBUG', TRUE); #上线后请设为false,或者去掉系统默认为false
+      require '/system/init.php';
+     运行上面代码系统将为你创建默认应用程序,允许更改一些基本配置,请参考如下常量的定义
+      ROOT_PATH  框架System地址常量  D:\WWW/system/
+      APP_NAME   应用程序名:  application
+      APP_PATH   应用程序地址:  D:/WWW/application/
+      HTTP_REFERER  上一个来源常量
+      APP_URI   你的当前访问的url脚本路由
+      WEB_STATIC 你的静态网页访问地址  http://youhost.come/web/ 
+      HTTP_URL   网站的首页   http://youhost.come/index.php
+	  HTML_STATIC_PATH  网站页面静态化路径
+  系统将自动为你的应用程序映射到框架引擎中.提供全方位的路由解析、安全过滤、让程序员真正的只关注你业务逻辑
+     
+
+ 
+【5】编码规则:
+       控制器规则:
+       5.1.1 位置: 控制器放在你的application/controllers/
+       5.1.2 命名组成部分:  控制器名+Controller+.php
+       5.1.3 其他规则: 首字母大写,控制器从安全的角度推荐你先注册再使用,请参考配置文件config.php--注册不是必须的
+       5.1.4 案例: IndexController.php  
+       5.1.5 url说明: url中的控制器部分首字母允许小写,程序解析url后将自动将首字母转换成大写
+
+
+       模块规则:
+       5.2.1 位置:模块的位置放在你的 application/modules/
+       5.2.2 命名组成部分:  模块名
+       5.2.3 其他规则:  模块从安全的角度推荐你先注册再使用,请参考配置文件config.php
+       5.2.4 url说明:  url中必须写你的module名
+	   
+	   模型规则:
+	    5.3.1 位置: 模型的位置放在你的 application/models/  如果是模块,那么位置在你的 application/modules/models/
+		5.3.2 命名组成部分: 模型名+Model
+		5.3.3 其他规则:首字母大写
+		5.3.4 案例说明: UserModel.php  
+		
+	   视图规则:
+	      5.4.1 位置: 视图的位置放在你的 application/views  如果是模块,那么位置在你的 application/modules/views/
+		  5.4.2 组成部分:控制类名是你的视图目录名注意严格区分大小写 控制器的方法是你的页面文件名 模板建议是使用继承或者widget 最大程度做到重用
+		  5.4.3 系统默认视图引擎smarty ,但是你可以使用你认为最好的视图引擎
+		  
+【6】config 配置文件
+      6.1 位置: application/config/
+      6.2 文件说明: config.php 网站配置文件
+                     database.php 数据库配置文件
+                     router.php  路由配置文件
+                     template.php 视图配置文件
+   
+
+
+【7】强大的url路由系统:
+       7.1 支持url伪静态
+       7.2 设置你的url伪静态   config/router.php
+
+     'parse'=>array(
+        'm'=>'', #默认模块
+        'c'=>'index', #默认控制器
+        'a'=>'index', #默认动作
+         #'url_Delimiter'=>'_', #url 分割符号
+        'Static_suffix'=>'.html',
+      ),
+
+       http://127.0.0.1/index/test.html
+       http://127.0.0.1/index/test/1.html
+
+     7.3 在zhphp 中你可以改变默认的uri分割符号,如果你需要改变默认分割符号请打开   #'url_Delimiter'=>'_', #url 分割符号
+          http://127.0.0.1/index_test.html
+          http://127.0.0.1/index_test_1.html
+
+  【8】url 传递参数.
+         http://127.0.0.1/index/test/1/zhanghua.html
+       public function testAction($id,$name){
+            echo $id,$name; //1  zhanghua
+      }
+      http://127.0.0.1/index/test?id=1?name=zhanghua.html
+       public function testAction(){
+            echo $this->_get('id');     1
+            echo $this->_get('name');   zhanghua 
+      }
+
+  【9】controller 控制器
+           isGet()  判断是否是get提交数据
+           _get($key)  获取get值
+           isPost()  判断是否是post提交数据
+           _post($data) 获取post提交的数据
+           isAjax()  判断是否是ajax
+           render($tpl='',$vars=array(),$cacheId='') 视图渲染层
+           segment($segment='') 获取url 段
+           9.1 案例说明: 参数传递必须是一个数组
+               9.1.1 在你的控制器
+	   $navList=array('title"=>'xxxxxxxxx','title2"=>'yyyyyy',...............);
+                    $data=array('navList'=>$navList);   //可以理解为: $smarty->assign('navList',$navList)
+                    $this->render('Index/index',$data);
+                  在视图:
+	             一维关联数组<{$navlist.title}>
+                     二维关联数组: 就必须要是有 <foreach> 来循环
+           9.1.2   如果既有一维也有二维
+	              $data=array( 'a'=>'aaaaaaa',
+		                  'b'=>array(
+			            'id'=>'1','name'=>'zhanghua'
+				  )
+			    )
+                  $this->render('Controller/action',array($data));
+
+	      在视图取出数据:
+	          <{$a}>  //输出 aaaaaa
+		  
+		  <{$b.id}> //输出 1
+
+		   对于数组b也可以用循环
+		     <{foreach  $b as $val}>
+                        <{$val}>  //输出 1   zhanghua
+                     <{/foreach}>
+
+           redirect($url = null, $status = 302)  url 重定向   $this->redirect('Index/test');
+           ajaxReturn($ajaxReturnData = null,$ajaxReturnType = 'string') ajax返回
+           database()  手动调用数据库链接对象
+           before_actionName() 在什么之前 
+           after_actionName()  在什么之后
+		   checkform($formhash)  返回 true 或者 false---检测form hash 预防 csrf 跨站式远程攻击
+		   
+
+         属性: $db 数据库链接对象
+
+  【10】 controller 与 view 设计规则
+            控制器名就是视图目录名
+            控制器中的方法就是视图文件名
+
+  【11】component组件
+        11.1 组件（Component）是一个帮助简化控制器逻辑的类。如果你有一些想要在控制器（或应用程序）之间共享使用的逻辑，那么组件通常是很适合你的。
+        11.2 组件（Component）的位置: 与你的Controllers下一级
+              application/controllers/components
+              application/modules/controllers/components/
+        11.3 组件命名规则:  组件名Component.php
+        11.4 组件类:   组件名Component extends AppComponent{
+                              在这里你可以拥有控制器的所有方法。
+                       }
+       
+
+  【12】controller 与 component
+         
+         12.1 在控制器共享的方式
+         12.1.1 注册你的components:   
+                 public $components=array('utils','users',.....); #'users'是你的组件名
+                   
+         12.2.2 调用方式:
+            12.2.2.1 面向对象调用方式       
+                   $util=new utilsComponent();
+                   $util->function();
+            12.2.2.2 静态调用方式
+                    utilsComponent::function();
+                   
+
+
+   【13】model 数据模型层
+        13.1  通常来讲: 一个表一个模型model,所有的模型类必须继承AppModel.class.php
+             
+        13.2模型中的数据库操作接口:
+        		 model 类提供了基本的数据操作接口，也就是说可以在你的model类中操作数据库,当然在你的控制器或者组件获取应用程序的任意地方都可以调用数据库操作接口,来操作等你数据库。
+        13.2.1      sql语句操作
+						execute() #执行无查询的sql
+						queryRow() #查询一行sql
+						queryAll() #查询所有
+                                                total()    #统计查询返回统计的结果行数 int
+
+         13.2.2     Activ语句链接操作,默认pdo数据连接对象处理
+					add()
+					save()
+					delete()
+					find()
+					findAll()
+
+          13.3  模型命名规则 : 
+                  13.3.1 系统提供model抽象类、数据库操作接口类DbPdo/mysqli/mysql继承model抽象类
+                  13.3.2 你的模型类需要继承AppModel应用模型基类
+                  13.3.3  UserModel extends AppModel{
+ 
+                          }
+                  13.3.4  命名规则: 模型名称首字母大写,在你的应用程序中调用的时候不区分大小写,引擎将自动为你转换大小写
+                  13.3.5  模型位置:  application/models/  或者 application/modules/models/
+                  13.3.6  模型名称:  模型名+Model.php
+                
+         13.4 应用规则:
+                 13.4.1 在你的控制器或者model都可以使用数据库操作类操作你的数据库，由于数据库类是资源类,所以程序建议你手动调用
+
+					 protected $db;
+					 public function __construct() {
+						$this->db=$this->database(); #返回数据库操作类对象
+					}
+
+        13.5 sql语句操作案例:pdo 预处理接口操作模式
+ 
+          13.5.1  insset 插入格式:
+		   13.5.1.1 insert 语句 预处理格式  ?占位符               
+            $sql="insert into user values(?,?,?)";
+			$data=array(null,'bbb',15);
+			$this->db->execute($sql,$data); #返回影响行数
+
+           13.5.1.2  insert 语句直接执行sql
+            $sql="insert into user values(null,'aaa',18)";
+			$this->db->execute($sql); #返回影响行数
+
+           13.5.1.3 insert 语句 预处理格式  :colour占位符
+			$sql="insert into user values(:id,:name,:age)";
+			$data=array('id'=>null,'name'=>'bbb','age'=>15);
+			echo $this->db->execute($sql,$data); #返回影响行数
+
+         13.5.2  update 修改格式
+   		  13.5.2.1 update 语句直接执行sql
+			 $sql="update user set name='vvvv',age=28 where id=25";
+			 $this->db->execute($sql); #返回影响行数
+
+         13.5.2.2 update 语句 预处理格式  ?占位符  #注意最后一个参数等价与 where
+				$sql="update user set name=?,age=? where id=?";
+				$data=array('bbbb',38,35);   #注意最后一个参数等价与 where
+				$this->db->execute($sql,$data); #返回影响行数
+
+        13.5.2.3 update 语句 预处理格式  :colour占位符  #注意最后一个参数等价与 where
+			 $sql="update user set name=:name,age=:age where id=:id";
+			 $data=array('name'=>'aqqqqqqqqqqqq','age'=>25,'id'=>32);  #注意最后一个参数等价与 where
+			 $this->db->execute($sql,$data); #返回影响行数
+			 
+	    13.5.3 delete 语句
+		  13.5.3.1 delete 语句直接执行sql
+			$sql="delete from user where id=10";
+			$this->db->execute($sql); #返回影响行数
+
+         13.5.3.2 delete 语句 预处理格式  ?占位符  #注意最后一个参数等价与 where
+			$sql="delete from user where id=?";
+			$data=array(35);
+			$this->db->execute($sql,$data); #返回影响行数
+
+        13.5.3.3 delete 语句 预处理格式  :colour占位符  #注意最后一个参数等价与 where
+			 $sql="delete from user where id=:id and name=:name";
+			 $data=array('id'=>32,'name'=>'aaaa');  
+			 $this->db->execute($sql,$data); #返回影响行数
+	   13.5.4 selete 查询语句
+	     13.5.4.1 select语句 直接执行sql 
+			 $sql="select * from user where id=20";
+			 $data=$this->db->query($sql);#返回一行
+			 结果:
+			 Array
+			(
+				[id] => 20
+				[name] => abc
+				[age] => 15
+			)
+
+         13.5.4.2 select 语句 预处理格式  ?占位符  
+			 $sql="select * from user where id=?";
+			 $data=array(25);
+			 $data=$this->db->query($sql,$data);#返回一行
+			 结果:
+			Array
+			(
+				[id] => 25
+				[name] => abc
+				[age] => 15
+			)
+		 13.5.4.2 select语句 预处理格式  :colour占位符
+			sql="select * from user where id=:id";
+			$data=array('id'=>28);
+			$data=$this->db->query($sql,$data);#返回一行
+           结果:
+			Array
+			(
+				[id] => 28
+				[name] => abc
+				[age] => 15
+			)
+
+         13.5.4.3 select语句 直接执行sql
+		    $sql="select * from user where id>20 && id<30";
+		    $data=$this->db->queryAll($sql); #查询所有
+          
+		 13.5.4.4 select 语句 预处理格式  ?占位符
+			$sql="select * from user where id>? && id<?";
+			$data=array(25,30);
+			$data=$this->db->queryAll($sql,$data);
+
+         13.5.4.4 select语句 预处理格式  :colour占位符
+            $sql="select * from user where id>:id && name=:name";
+			$data=array('id'=>20,'name'=>'abc');
+			$data=$this->db->queryAll($sql,$data);
+
+
+
+       13.6  链接操作数据操作案例
+   
+          13.6.1 add($tableName,$data);#请不要传递表前缀 执行成功返回行数
+			  $data=array(null,'bbb',15);
+			  $this->db->add('user',$data);  等价于 insert into user values(null,'bbb',15) 
+
+
+         13.6.2 save($tableName,$data,$where='')#注意where条件是字符串,程序以自动做了预防sql注入的处理，执行成功返回行数，如果要使用Av的save()方法必须有where
+		
+			$data=array( 'name'=>'aaaa','age'=>20);
+			$this->db->save('user',$data,'id=28');  等价于 update user set name='aaa',age=20 where id=28
+
+			13.6.2.1 程序在修改的时候可以将where 条件作为数据传递,但是必须是最后一个
+			  $data=array('name'=>'xxxxx','age'=>25,'id'=>39);
+			  $this->db->save('user',$data);  等价于 update user set name='xxxxx',age=25 where id=39
+  
+
+         13.6.3 delete($tableName,$where='')
+
+			  $this->db->delete('user','id=27');  等价于 delete from user where id=28
+			  $this->db->delete('user',array('id'=>38));  等价于 delete from user where id=38
+
+
+         13.6.4 find($tableName,$field, $where='')
+			   $this->db->find('user','id,name,age','id=27');  等价于 selete id,name,age from user where id=27
+			   $this->db->find('user','id,name,age',array('id'=>28)); 等价于 selete id,name,age from user where id=28
+
+         13.6.5 findAll($tableName,$field, $where='')
+               $this->db->find('user','id,name,age','id>27 and id < 30');  等价于 selete id,name,age from user where id>27 and id <30
+   
+
+13.7 model层应用数据操作类
+           protected $db;
+           public function __construct() {
+                 $this->db=$this->database(); 
+           }
+
+13.8 数据库的应用: 支持pdo/mysqli/mysql原生态应用
+  
+   13.8.1 得到数据库原生态操作对象
+            $dbh=config::readConfig('DbConnection'); 将依次返回 pdo  mysqli mysql 
+          原生态数据库 需要你手动调用
+
+
+13.9   手动调用数据库 
+     
+           13.9.1 打开数据库对象: $db=database::init();   返回数据库操作对象
+          
+           13.9.2 操作sql  $db->操作接口();
+            
+           13.9.3 关闭数据库操作对象  database::close();
+         
+    
+
+
+13.10 模型层自动验证：
+       rules();  将自动验证你的表单规则
+
+【14】 控制器与模型
+    14.1 控制器调用模型中的方法
+       14.1.1 单模型调用:
+              $this->model('User')->modelFunc();  #注意这里只能写模型名称,不区分大小写，UserModel 就错了
+       14.2.2 多模型调用
+           private  $models;
+           public function __construct() {
+               $this->db=$this->database();
+               $this->models=$this->model(array('user','post')) ;
+          }
+
+        #注意数组的顺序与上面声明的一致
+         $this->models[0]->->modelFunc();
+         $this->models[1]->->modelFunc();  
+
+
+【15】 视图层
+        15.1 视图规则:
+           15.1.1 视图位置: 视图放在你的application/views 如果你有模块则 放在你的 application/modules/views 
+           15.1.2 视图命名规则: 通常一个控制器代表一个视图目录,一个方法代表一个页面
+
+        15.2 控制器与视图
+                 $this->render($tpl='',$vars=array(),$cacheId='')
+             15.2.1 参数说明: $tpl 如果为空则默认访问当前控制器的当前方法的页面
+                              $tpl='c/a' 如果有路径则自动匹配控制器与方法，如果存在modules则系统自动匹配不需要再重复申明
+                              $vars  视图层数据变量必须是数组
+                              $cacheId  缓存id号
+             15.2.2 应用说明: 
+                     15.2.2.1  如果动作名称同视图名称相同(请求是当前动作页面)
+                     15.2.1.1 没有参数: 
+                                     $this->render(); 
+                     15.2.1.2 有参数传递到模板:
+                                      $data=array('navList'=>$navList);
+                                      $this->render('Index/index',$data);
+
+                     15.2.1.2  如果你在当前动作请求其他动作的视图 或者其他控制的视图
+                                $data=array('navList'=>$navList);
+                                $this->render('Post/index',$data);
+
+                     15.2.2.2 在模板中使用: 
+                           15.2.2.2.1  如果是字符串  <{$标签名}>
+                           15.2.2.2.2  如果是数组   需要用到循环  <{foreach}>
+                   
+                      注意: 如果标签的内容是数组直接直接输出后会报错误
+
+                    
+
+       15.3视图层标签:
+             {base_href} 等价于 <base href="http://127.0.0.1:8080/application/" />
+             {css_path}  等价于 http://wwww.youhost.com/application/web/themes/css/
+             {js_path}   等价于 http://wwww.youhost.com/application/web/themes/js/
+             {images_path}   等价于 http://wwww.youhost.com/application/web/themes/images/
+             {themes_path}   等价于 http://wwww.youhost.com/application/web/themes/
+             {web_themes}    等价于 http://wwww.youhost.com/system/web/web/themes/
+			 {static_web}    等价于 http://127.0.0.1:8080/application/web/html/ 
+              
+        15.4 html辅助标签
+
+           注意: 所有的链接元素标签
+          
+           <{html_anchor m="home" c="Index" a="test" text='首页' args='id:1,name:2,age:3'  id='12' name='my'  class='myIndex'}>  
+                 等价于
+           <a href="http://www.youhost.com/home/Index/test/1/2/3.html">首页</a>
+              
+            前台建议使用下面的方式
+         <{html_anchor  href='Index/index/1/2/3' text='首页' id='12' name='my'  class='myIndex'}>
+       
+      参数说明: uri: a标签的链接    数据类型:可以是一个数组 也可以是一个字符串
+                    text: a标签的文本   数据类型:字符串 或者 int
+                    attributes: a标签的属性
+
+         <{url href='admin/Admin/login.html'}>
+		 
+		   预防csrf跨站式远程攻击 生成html from 表单
+		  <{html_form  action="" method="" name="" encrypt=""}> 生成 
+		  
+		   <form action="" method="" name="" encrypt="">
+		     <input  type="hidden" name="formhash"  value="加密值"/>
+		   
+
+       *****建议同学们自己封装,然后写使用文档。*****
+
+   【16】widget 视图挂件
+           Widget，中文可译作：小部件、小工具、微件、挂件等，是一小块可以在任意一个基于HTML的网页上执行代码构成的小部件，它的表现形式可能是视频、地图、新闻或小游戏等等             。它的根本思想来源于代码复用
+
+   【17】 views视图与widget挂件
+        17.1目录: widget 在你的application/widget里面           
+        17.2 命名规则: 名称Widget.php
+        17.3 在视图中调用你的widget:
+            <{widget name="testWidget"  args=array('name',2)}><{/widget}>  自动加载 application/widget/testWidget.php 返回的给文件的代码的结果
+        17.4 参数说明
+             name: 文件名
+             args: 参数 参数格式为数字索引数组
+
+        17.5 编辑你的widget文件：在这里写你的业务逻辑
+           print_r($args);#打印参数
+         return 'testWidget'; 返回结果
+		 
+    【18】 layout 页面基本布局 
+	    18.1 在你的配置文件中指定主模板layout,如果指定了该配置，那么就表明你的所有页面都继承该模板
+		       'layout'=>'main1',#布局主体页面
+	    18.2 在你的控制器中可以定义属性 
+		       protected $layout='main2';
+        18.3 解析规则:
+		   18.3.1  只声明了 'layout'=>'main1',#布局主体页面,程序将默认加载view/layout/main1.html作为你的基本布局模板
+		   18.3.2  声明了'layout'=>'main1', 同时在你的控制器中也指定了 protected $layout='main2'; 程序将view/layout/main1.html 作为顶级布局模板，view/layout/main2.htm
+		           将作为父级布局模板,当前的操作就是子布局
+		   18.3.3 在你的控制器中指定了 protected $layout='main2'; 没有配置 'layout'=>'', 那么程序将view/layout/main2.htm 作为你的父级布局模板
+		   18.3.4 不需要布局'layout'=>'', 并且也不声明 protected $layout 程序将不继承任何模板
+		   18.3.5 模板布局规则:
+		          参见smarty3 的继承属性：
+				18.3.5.1 是模板之间的事情和php程序没有关系 
+				18.3.5.2 在模板中使用 <{extends file="模板名称"}> 函数实现模板继承,注意 使用<{extends}>必须用在子模板中的第一行
+				18.3.5.3 在父模板中声明一个区域”块“<{block}>如果在子模板中需要该多个模板中的位置，就需要声明多个块。也需要为每个块起个名字。
+				18.3.5.4 合并子模板和父模板的<{block}>标签的内容：
+				18.3.5.4.1 使用append添加 或 prepend追加{block}标签
+				18.3.5.4.2 使用smarty的保留变量{$smarty.block.child}作为展位呼号，将子模板{block}中的内容，插入到父模板中的任何位置。
+				18.3.5.4.3 使用smarty的保留变量{$smarty.block.parent}[在子模板中写]，将父模板中的内容插入到子模板中的任何位置。
+				
+					<{extends file="layout/main1.html"}>
+					<{block name='main'}> dddd <{/block}>
+
+
+           18.3.6 完整的子页面模板布局
+
+<{extends file="layout/main1.html"}>    说明: 继承你的父级模板
+<{block name='charset'}><meta charset="utf-8"><{/block}>  说明: 改变页面编码
+<{block name='title'}> mycms 是大法官<{/block}>  说明: 改变网页标题
+<{block name='style'}>     说明: 新增你的css样式
+
+  <link  rel="stylesheet" type='text/css' href='<{css_path}>style.css' />
+
+<{/block}>
+
+
+<{block name='header'}>  
+       这里是你自己的头部
+<{/block}>
+
+
+<{block name="main"}>
+       这里是你自己的网站内容部分
+<{/block}>
+
+<{block name='footer'}>
+    这里是你自己的尾部
+<{/block}>
+
+<{blcok name='js'}>   说明: 在这里加载你的js 文件
+    <script type="text/javascript" src='<{{js_path}}>my.js'></script>
+<{/block}>
+  
+  18.4 表单token
+          <{formtoken}>
+
+
+
+   【19】 vendors 第三方应用
+        19.1  控制器与第三方应用
+            
+
+        19.2   视图与第三方应用 
+
+  【20】 应用类
+	     20.1 验证码类:
+             类名：captcha.class.php
+			 功能: 产生验证码图片
+			 应用案例:
+					public function captchaAction(){
+						$captcha = new captcha();
+						$captcha->showImg();
+					}
+		      <img src="/admin/Admin/captcha" onclick="javascript:this.src='/admin/Admin/captcha/'+Math.random();"/>
+
+
+           
+			  
+	     20.2  httpRequest 类
+	        20.2.1类名:  httpRequest.class.php
+	        20.2.2方法:   isGet()  判断是否是get 提交
+	              get($key)  如果是get 提交获取get参数
+	              isPost()   判断是否是post 提交
+		          post($data=array())     如果是post 提交获取post的数据 
+                  isAjax()  判断是否是ajax 提交数据
+                  ajaxReturn(&$ajaxReturnData = null,$ajaxReturnType = 'string')  程序端向客户端返回ajax格式的数据
+                  redirect($url = null, $status = 302) url重定向
+				  addSession('key','value');#添加session ---session的键和值都经过内部加密
+				  setSession('key','value');#修改session
+				  getSession('key')#获取session  如果找到就返回值 否则就返回null
+				  getAllSession(); #获取所有session
+				  unsetSession('key')#销毁某个session
+				  unsetAllSession()# 销毁所有session
+				  addCookie('cookieName','cookieValue',time);#添加cookie--cookie键和值都经过内部加密  修改成功返回true 否则返回 false
+				  setCookie('cookieName','cookieValue',time);#修改cookie  修改成功返回true 否则返回 false
+				  getCookie('cookieName'); #获取cookie 如果找到就返回值 否则就返回null
+				  unsetCookie('cookieName','cookieValue',time()-time());# 时间为负数,销毁某个cookie
+				  unsetAllCookie();销毁所有cookie
+			20.2.3调用方式:
+			       httpRequest::方法();
+	         20.2.4 session 与 cookie
+			      依据的你的生产环境,自行决定是否是否zhphp封装的函数,你也可以是php原生态的方式。
+				   session 默认是按照文件的方式保存,但是在某项特定的应用中建议你保存在数据库中
+				   如果你希望保存在数据库中请修改配置文件中的保存方式为db 或者mysql
+				   修改配置文件sesion存储方式为mysql  
+                   'save_handler'=>'mysql | [db] | [file]',#session保存方式
+				  session 数据库的表,请参见系统为你提供的备份
+ 
+		20.3 html类
+		    20.3.1 类名: html.class.php
+			20.3.2 功能: php依据数据生成html元素
+            
+					  
+					  
+   【21】函数库
+        21.1系统函数库:
+          21.1.1 函数库文件位置: system/common/tools.php
+		  21.1.2 引入方式: 系统默认引入
+		  21.1.3 函数名:  
+			 get_ip() 返回客户端的ip地址
+			 filterParam($url,$paramArgs) 精准过滤url,将非法的url参数去除
+             clean($data)  字符串反转义
+             addslashes_deep($data) 字符串转义
+             encrypt($string, $key) 加密函数
+             decrypt($string, $key)  解密函数
+             remove_all_space($str, $url_encoded = TRUE); 更加安全转换url空白
+			 html_space($str = '',$var = '')  转换空白字符
+             html_entity($str = '') 转义html实体，对于一些HTML特别字符进行转义以免跨站脚本的攻击
+             save_filename($str, $relative_path = FALSE) 安全过滤文件名
+             read_folder_directory($dir) 遍历文件夹
+             delete_floder($dir)删除文件夹
+             show_msg($error ='',$url='',$go='-1')  错误错定义向函数
+             filterKword($data='',$words=array());  过滤非法字符  如果存在非法字符返回false 否则返回true
+			 lazdf($ip) 依据ip地址得到用户所在的位置
+			 xml_array($xmlObj) xm转array
+			 bubble_sort ($array)  php实现冒泡排序
+			 mk_dir($dirs,$mode=0755) 创建目录
+			 getBrowser() 获取浏览器
+			 zh_input_bb($array) 预防xss攻击
+			 gjj($str) 对字符串进行xss攻击预防
+			 rebuild_array($arr) 二维数组转一位数组
+		 21.1.4 调用方式: 直接使用函数
+		 
+		21.2 自定义函数库
+		    engine::load_func('@.fileNamec');#系统将自动加载你的应用程序,加载后你就可以使用你封装的函数了。
+			 @ 代表 application/common/
+			 fileName 代表 fileName.php
+			 系统将自动为你加载application/common/fileName.php
+       
+     【22】框架引擎对外开发接口
+	        template::setTpl();#获取smarty模版对象
+            engine::getObject('className');#得到已经实力化的对象
+            common::get_ip(); 获取客户端ip
+			database::init()  手动链接数据库
+			database::close()  手动关闭数据库
+            config::readConfig('key',['twokey']) 读取配置文件
+			config::writeConfig('key','value')    写配置文件
+			engine::load_func() 加载函数文件 如果是当前工程函数则需要在文件名前加  @.fileName
+			
+	【23】第三方库:
+	         Email类: 
+				setTo($inAddress) 
+				setCC($inAddress) 
+				setBCC($inAddress) 
+				setFrom($inAddress) 
+				setSubject($inSubject) 
+				setText($inText) 
+				setHTML($inHTML) 
+				setAttachments($inAttachments) 
+				checkEmail($inAddress) 
+				loadTemplate($inFileLocation,$inHash,$inFormat) 
+				getRandomBoundary($offset) 
+				getContentType() 
+				formatTextHeader() 
+				formatHTMLHeader() 
+				formatAttachmentHeader($inFileLocation) 
+				send() 
+				
+			 Mongodb类
+				  $mongo = new HMongodb("127.0.0.1:11223");
+				  $mongo->selectDb("test_db");
+				 创建索引
+				 $mongo->ensureIndex("test_table", array("id"=>1), array('unique'=>true));
+				 获取表的记录
+				 $mongo->count("test_table");
+				 插入记录
+				 $mongo->insert("test_table", array("id"=>2, "title"=>"asdqw"));
+				 更新记录
+				 $mongo->update("test_table", array("id"=>1),array("id"=>1,"title"=>"bbb"));
+				 更新记录-存在时更新，不存在时添加-相当于set
+				 $mongo->update("test_table", array("id"=>1),array("id"=>1,"title"=>"bbb"),array("upsert"=>1));
+				查找记录
+				 $mongo->find("c", array("title"=>"asdqw"), array("start"=>2,"limit"=>2,"sort"=>array("id"=>1)))
+				 查找一条记录
+				 $mongo->findOne("$mongo->findOne("ttt", array("id"=>1))", array("id"=>1));
+				 删除记录
+				 $mongo->remove("ttt", array("title"=>"bbb"));
+				 仅删除一条记录
+				  $mongo->remove("ttt", array("title"=>"bbb"), array("justOne"=>1));
+				 获取Mongo操作的错误信息
+				 $mongo->getError();
+				 
+         Twitter类：
+		 
+		 Snoopy类：
+		 
+		 simple_html_dom_node类
+		 
+		 IXR_Value类
+		 
+		 PclXmlTag类
+		 
+	【24】模板引擎
+	    phpTal1.2.2
+		
+		raintpl3
+		
+		smarty3
+		 
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+mysql> drop table session;
+mysql> create table session(
+         session_id  varchar(33) not null default '',#sessionId
+         user_id int unsigned not null default '0',#用户id
+         user_ip char(19) not null,#用户ip
+         last_visit varchar(50) not null,#最后访问的时间
+         role_id  int not null,#角色id
+         group_id int not null,#分组id
+         module  char(20) not null,#操作模块
+         control char(20) not null,#操作控制器
+         action char(20) not null,#具体操作
+         data_value text not null,#session 的数据值
+         key user_id(user_id),#将user id设为普通索引
+         key session_id(session_id)#将user id设为普通索引
+       )engine=myisam charset=utf8;
+
+       http://www.great-code.com/show/166  应用类 rss
