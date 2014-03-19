@@ -150,7 +150,7 @@ class dbPdo extends model {
     {
         // TODO: Implement save() method.
           $queryStr=$this->setQuery($data);#得到预处理查询格式
-          $tableName=strtoupper($this->getTab_().$tableName);#得到表名
+          $tableName=$this->getTab_().$tableName;#得到表名
           if(empty ($where)){ #如果不存在where 那么where 条件就是data里面的最后一个元素
               $arr=explode(',', $queryStr);
                $tt=end($arr);
@@ -159,7 +159,7 @@ class dbPdo extends model {
               if(is_string($where)){
                   $where='  WHERE   '.$this->where($where);
               }else if(is_array($where)){
-                  $where='  WHERE   '.$this->setQuery($data);#得到预处理查询格式 
+                  $where='  WHERE   '.$this->setQuery($data);#得到预处理查询格式
               }
                
           }
@@ -177,9 +177,9 @@ class dbPdo extends model {
     public function  delete($tableName,$where='')
     {
         // TODO: Implement delete() method.
-           $tableName=strtoupper($this->getTab_().$tableName);#得到表名
+           $tableName=$this->getTab_().$tableName;#得到表名
            if(is_string($where)){#如果是字符串
-                $where='  WHERE   '.$this->where($where);  
+                $where=empty($where)?null: '  WHERE   '.$this->where($where);
                  $sql='DELETE FROM '.$tableName .$where;
                  $rows=$this->execute($sql);#执行sql
                   unset($tableName,$sql,$where);
@@ -204,10 +204,11 @@ class dbPdo extends model {
     public function  find($tableName,$field, $where='')
     {
         // TODO: Implement find() method.
-          $tableName=strtoupper($this->getTab_().$tableName);#得到表名
+          $tableName=$this->getTab_().$tableName;#得到表名
            if(is_string($where)){#如果是字符串
-               $where='  WHERE   '.$this->where($where);
+               $where=empty($where)?null: '  WHERE   '.$this->where($where);
                $sql='SELECT  '.$field.'  FROM  '.$tableName.$where;
+               echo $sql;
                 $udata=$this->query($sql);
                 unset($tableName,$where,$sql);
                 return $udata;
@@ -226,12 +227,12 @@ class dbPdo extends model {
     * @param string $where
     * @return type 
     */
-    public function findAll($tableName,$data, $where='')
+    public function findAll($tableName,$field, $where='')
     {
         // TODO: Implement findAll() method.
         $tableName=strtoupper($this->getTab_().$tableName);#得到表名
            if(is_string($where)){#如果是字符串
-               $where='  WHERE   '.$this->where($where);
+               $where=empty($where)?null: '  WHERE   '.$this->where($where);
                $sql='SELECT  '.$field.'  FROM  '.$tableName.$where;
                $udata=$this->queryAll($sql);
                 unset($tableName,$where,$sql);
@@ -247,6 +248,7 @@ class dbPdo extends model {
     }
     private function  where($where){
         $dbh=$this->prepare();#得到数据库操作对象
+        $where=gjj($where);
         $dbh->quote($where);#sql条件进行预防sql注入处理
         return $where;
     }

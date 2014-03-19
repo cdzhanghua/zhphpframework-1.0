@@ -34,13 +34,22 @@ final class engine {
                  APP_PATH.'modules/controllers/',
                  APP_PATH.'modules/models/',
              );
+           $_txt=array('.php','.class.php');
            foreach($_src as $resource){
-              $file=$resource . $class . '.class.php';
-              if(is_file($file)){
-                 include_once($file);
+                foreach($_txt as $txt){
+                    $file=$resource . $class . $txt;
+                    if(is_file($file)){
+                        $filesha1=sha1_file($file);#避免重复加载将文件名名sha1()加密后存放在$GLOBALS['_LOADAPPFILENAME']数组总
+                        if( ! isset($GLOBALS['_LOADAPPFILENAME'])){ $GLOBALS['_LOADAPPFILENAME']=array();}
+                        $boolean=in_array($filesha1,$GLOBALS['_LOADAPPFILENAME']);
+                        if($boolean === false){
+                            include_once($file);
+                            $GLOBALS['_LOADAPPFILENAME'][]=$filesha1;
+                        }
+                    }
+                }
               }
-          }
-            spl_autoload($class);
+           spl_autoload($class);
          }else{
              return true;
          }
@@ -127,7 +136,7 @@ final class engine {
     public static function load($class){
         $Object=self::getObject($class);
 	    if(is_null($Object)){#就表明换成中没有对象
-		   if(class_exists($class)){
+            if(class_exists($class)){
               $Object = new $class();#否则就实例化对象
               self::$instance[$class]=serialize($Object);#把对象序列化并cache起来
 			  return $Object;

@@ -431,9 +431,12 @@ function delete_floder($dir)
     $farr = array(
         "/\\s+/",
         "/<(\\/?)(script|i?frame|style|html|body|title|link|meta|object|\\?|\\%)([^>]*?)>/isU",
-        "/(<[^>]*)on[a-zA-Z]+\s*=([^>]*>)/isU",
+        "/(<[^>]*)on[a-zA-Z]+\\s*=([^>]*>)/isU",
+        '/add/ ','/and/','/count/','/order/','/table/','/by/','/create/','/delete/','/drop/','/from/','/grant/',
+     '/insert/', '/select/','/truncate/','/update/','/use/','/--/','/#/','/\'/','/"/','/;/','/group_concat/','/column_name/','/information_schema.columns/',
+        '/table_schema/','/union/','/where/','/script/'
     );
-    $str = preg_replace($farr,"",$str);
+    $str = preg_replace($farr,"{*}",$str);
     return addslashes($str);
 }
 function zh_input_bb($array){

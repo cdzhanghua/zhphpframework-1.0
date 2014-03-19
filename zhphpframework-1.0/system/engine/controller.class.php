@@ -198,7 +198,7 @@ class controller{
 protected  function  model($modelName){
    if(is_string($modelName)){
            $UmodelName=ucfirst($modelName).'Model';
-           $umodle=engine::load($UmodelName);
+            $umodle=engine::load($UmodelName);
            unset($UmodelName,$modelName);
            return $umodle;
      }else if(is_array($modelName)){

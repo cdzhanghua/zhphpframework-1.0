@@ -23,6 +23,8 @@ function smarty_block_widget($params, $content, $template, &$repeat)
     foreach($params as $_key=>$_val){
         $$_key=$_val;
     }
-    $fileName=APP_PATH.'widget/'.$name.'.php';
-   return include_once($fileName);
+     $fileName1=APP_PATH.'widget/'.$name.'.php';
+    $fileName2=APP_PATH.'widget/'.$name.'.html';
+    $fileName =file_exists($fileName1)?$fileName1:$fileName2;
+    return include_once($fileName);
 }
